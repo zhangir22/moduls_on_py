@@ -4,6 +4,22 @@ def show_list(lst):
         print(i,end=" | ")
     print("\n")
 #
+def join_array_to_dictionary(arr,arr1):
+    d = {}
+    for i in range(len(arr)):
+        d[arr[i]] = arr1[i]
+    return d
+#
+def create_dictionary(array):
+    values = dict()
+    for i in range(len(array)):
+        values[i] = array[i]
+    return values
+#
+def show_keys(dictionary):
+    for i in dictionary:
+        print(i)
+#
 def show_dictionary(dictionary):
     for i in dictionary:
         print(f"{i} = {dictionary[i]}")

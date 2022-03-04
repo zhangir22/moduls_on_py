@@ -1,29 +1,6 @@
-from django.db import models
-from django import forms
 import pyodbc
 
 from datetime import date as dt
-
-from django.forms import ModelForm
-
-
-class ModelSample(models.Model):
-    Date = models.DateTimeField("Date")
-    Name = models.CharField("Name", max_length=100)
-    Count = models.IntegerField("Count")
-    Distance = models.IntegerField("Distance")
-
-    def __str__(self):
-        return self.Name
-
-
-class Sample:
-    def __init__(self, date, name, count, distance):
-        self.Date = date
-        self.Name = name
-        self.Count = count
-        self.Distance = distance
-
 
 
 class Sql:
@@ -43,3 +20,8 @@ class Sql:
             return cursor.execute(query).fetchall()
         else:
             return False
+
+sql = Sql('python_base')
+temp = sql.manual("SELECT Name FROM sample", response=True)
+for i in temp:
+    print(i.Date)

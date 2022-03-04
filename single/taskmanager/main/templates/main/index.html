@@ -10,35 +10,83 @@
     <table class ='table table-striped table-dark table-bordered table-hover'>
         <thead >
         <tr>
-        <th scope="col">Date</th>
-        <th scope="col">Name</th>
-        <th scope="col">Count</th>
-        <th scope="col">Distance</th>
+        <th scope="col"  id="date">Date</th>
+        <th scope="col" data-type = "text" id="name">Name</th>
+        <th scope="col" data-type = "integer" id="count">Count</th>
+        <th scope="col" data-type = "integer" id="distance">Distance</th>
         </tr>
         </thead>
         <tbody>
         {% for i in models %}
             <tr>
-                <td>{{i.date}}</td>
-                <td>{{i.name}}</td>
-                <td>{{i.count}}</td>
-                <td>{{i.distance}}</td>
+                <td>{{i.Date}}</td>
+                <td>{{i.Name}}</td>
+                <td>{{i.Count}}</td>
+                <td>{{i.Distance}}</td>
 
             </tr>
         {% endfor %}
         </tbody>
     </table>
-    {% if tp_sort == 0 %}
-    <button class="btn btn-primary"><a style="text-decoration:none" class="link-dark" href="{% url 'sort' 'name' 1 %}"><strong>Sort name to upper</strong></a></button>
-      <button class="btn btn-primary"><a style="text-decoration:none" class="link-dark" href="{% url 'sort' 'count' 1 %}"><strong>Sort count to upper</strong></a></button>
-        <button class="btn btn-primary"><a style="text-decoration:none" class="link-dark" href="{% url 'sort' 'distance' 1 %}"><strong>Sort distance to upper</strong></a></button>
-    {%endif%}
-    {% if tp_sort == 1 %}
-    <button class="btn btn-danger"><a style="text-decoration:none" class="link-dark" href="{% url 'sort' 'name' 0 %}"><strong>Sort name to below</strong></a></button>
-     <button class="btn btn-danger"><a style="text-decoration:none" class="link-dark" href="{% url 'sort' 'count' 0 %}"><strong>Sort count to below</strong></a></button>
-        <button class="btn btn-danger"><a style="text-decoration:none" class="link-dark" href="{% url 'sort' 'distance' 0 %}"><strong>Sort distance to below</strong></a></button>
-    {%endif%}
-
 
 </body>
+<style>
+   #date:hover{
+  cursor:no-drop
+}
+#name,#count,#distance:hover{
+  cursor:pointer
+}
+</style>
+
+
+<script>
+    const table = document.querySelector('table');
+let colIndex = -1;
+const sortTable = function(index, type, isSorted){
+  const tbody = table.querySelector('tbody');
+
+  const compare = function(rowA,rowB){
+     const rowDataA = rowA.cells[index].innerHTML;
+     const rowDataB = rowB.cells[index].innerHTML;
+     console.log(type);
+     switch(type){
+       case 'integer':
+            return rowDataA - rowDataB;
+            break;
+       case 'text':
+            if(rowDataA < rowDataB)return -1;
+            if(rowDataA > rowDataB)return 1;
+            return 0;
+            break;
+     }
+  }
+  let rows = [].slice.call(tbody.rows)
+
+  rows.sort(compare);
+
+  if(isSorted) rows.reverse();
+
+  table.removeChild(tbody);
+
+  for(let i = 0; i < rows.length;i++){
+    tbody.appendChild(rows[i]);
+  }
+  table.appendChild(tbody);
+}
+
+table.addEventListener('click', (e) => {
+  const el = e.target;
+  if(el.nodeName != 'TH') return ;
+
+  const index = el.cellIndex;
+  if(index == 0)return;
+  const type = el.getAttribute('data-type');
+
+  sortTable(index,type,colIndex==index);
+
+  colIndex = (colIndex==index) ? -1 : index;
+});
+
+</script>
 </html>
